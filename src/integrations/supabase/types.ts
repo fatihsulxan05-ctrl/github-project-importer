@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_data: {
+        Row: {
+          data: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          data?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          data?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       report_subscriptions: {
         Row: {
           attendance: Json
