@@ -1,5 +1,3 @@
-import type { State } from "./store";
-
 /** What a cloud backup holds: the same four lists the device keeps locally. */
 export type Snapshot = {
   students: unknown[];
@@ -8,10 +6,18 @@ export type Snapshot = {
   takrirler: unknown[];
 };
 
+/** Anything shaped like the device's state; the lists are copied as they are. */
+export type SnapshotInput = {
+  students?: unknown[];
+  tutanaklar?: unknown[];
+  attendance?: unknown[];
+  takrirler?: unknown[];
+};
+
 export type SnapshotCounts = { students: number; tutanaklar: number; attendance: number; takrirler: number; days: number };
 
 /** Device state -> cloud backup shape (missing lists become empty ones). */
-export function toSnapshot(s: Partial<State> | null | undefined): Snapshot {
+export function toSnapshot(s: SnapshotInput | null | undefined): Snapshot {
   return {
     students: s?.students ?? [],
     tutanaklar: s?.tutanaklar ?? [],
