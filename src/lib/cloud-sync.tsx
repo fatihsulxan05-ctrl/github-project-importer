@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useStore, type State } from "./store";
 import { useAuth } from "./auth";
 import { loadCloudData, saveCloudData } from "./cloud-data.functions";
-import { isEmptySnapshot, sameSnapshot, snapshotCounts, toSnapshot, type Snapshot, type SnapshotCounts } from "./cloud-data";
+import { isEmptySnapshot, sameSnapshot, snapshotCounts, toSnapshot, type Snapshot, type SnapshotCounts, type SnapshotInput } from "./cloud-data";
 export type CloudStatus = "signedOut" | "loading" | "ready" | "error";
 
 type Cloud = {
@@ -24,6 +24,15 @@ type Cloud = {
 const CloudContext = createContext<Cloud | null>(null);
 
 const errText = (e: unknown) => (e instanceof Error ? e.message : String(e));
+
+/** The backup travels as text; turn it back into the four lists, tolerating anything odd. */
+const parseCloud = (json: string): Snapshot => {
+  try {
+    return toSnapshot(JSON.parse(json) as SnapshotInput);
+  } catch {
+    return toSnapshot(null);
+  }
+};
 
 export function CloudSyncProvider({ children }: { children: ReactNode }) {
   const { all, replaceAll, ready } = useStore();
@@ -90,14 +99,15 @@ export function CloudSyncProvider({ children }: { children: ReactNode }) {
           if (!isEmptySnapshot(local)) void push(local);
           return;
         }
-        setCloud({ ...snapshotCounts(res.snapshot), updatedAt: res.updatedAt });
+        const remote = parseCloud(res.json);
+        setCloud({ ...snapshotCounts(remote), updatedAt: res.updatedAt });
         if (isEmptySnapshot(local)) {
           skipPush.current = true;
-          replaceAll(res.snapshot as unknown as State);
+          replaceAll(remote as unknown as State);
           setStatus("ready");
           return;
         }
-        if (sameSnapshot(local, res.snapshot)) {
+        if (sameSnapshot(local, remote)) {
           setStatus("ready");
           return;
         }
@@ -138,9 +148,10 @@ export function CloudSyncProvider({ children }: { children: ReactNode }) {
         setMessage("Bulutta yedek yok.");
         return;
       }
+      const remote = parseCloud(res.json);
       skipPush.current = true;
-      replaceAll(res.snapshot as unknown as State);
-      setCloud({ ...snapshotCounts(res.snapshot), updatedAt: res.updatedAt });
+      replaceAll(remote as unknown as State);
+      setCloud({ ...snapshotCounts(remote), updatedAt: res.updatedAt });
       setConflict(false);
       setMessage("");
       setStatus("ready");
