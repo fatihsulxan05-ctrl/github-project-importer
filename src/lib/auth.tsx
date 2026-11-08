@@ -28,7 +28,7 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
       setUser(data.session?.user ?? null);
       setReady(true);
     });
-    const sub = supabase.auth.onAuthStateChange((event, session) => {
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
       // TOKEN_REFRESHED and INITIAL_SESSION fire constantly; only identity changes matter here.
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       setUser(session?.user ?? null);
@@ -36,7 +36,7 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
     });
     return () => {
       alive = false;
-      sub.subscription.unsubscribe();
+      data.subscription.unsubscribe();
     };
   }, []);
 

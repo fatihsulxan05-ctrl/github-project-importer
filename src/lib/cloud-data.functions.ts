@@ -23,7 +23,8 @@ export const loadCloudData = createServerFn({ method: "GET" })
       .maybeSingle();
     if (error) throw new Error(error.message);
     if (!data) return null;
-    return { snapshot: data.data as unknown as CloudSnapshot, updatedAt: data.updated_at as string };
+    // Handed over as text: the backup is free-form JSON, and a string always survives the trip back.
+    return { json: JSON.stringify(data.data ?? {}), updatedAt: data.updated_at as string };
   });
 
 /** Replaces this signed-in teacher's backup with what the phone holds. */

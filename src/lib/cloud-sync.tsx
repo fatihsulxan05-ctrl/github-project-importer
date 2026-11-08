@@ -4,7 +4,6 @@ import { useStore, type State } from "./store";
 import { useAuth } from "./auth";
 import { loadCloudData, saveCloudData } from "./cloud-data.functions";
 import { isEmptySnapshot, sameSnapshot, snapshotCounts, toSnapshot, type Snapshot, type SnapshotCounts } from "./cloud-data";
-
 export type CloudStatus = "signedOut" | "loading" | "ready" | "error";
 
 type Cloud = {
