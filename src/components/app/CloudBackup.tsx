@@ -2,7 +2,7 @@ import { useState } from "react";
 import "@lovable.dev/cloud-auth-js/styles.css";
 import { useAuth } from "@/lib/auth";
 import { useCloud } from "@/lib/cloud-sync";
-import { describeSnapshot, snapshotCounts } from "@/lib/cloud-data";
+import { describeCounts, describeSnapshot, snapshotCounts } from "@/lib/cloud-data";
 import { useStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";

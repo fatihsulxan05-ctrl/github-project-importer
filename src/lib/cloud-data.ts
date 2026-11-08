@@ -8,7 +8,7 @@ export type Snapshot = {
   takrirler: unknown[];
 };
 
-export type SnapshotCounts = { students: number; tutanaklar: number; attendance: number; takrirler: number };
+export type SnapshotCounts = { students: number; tutanaklar: number; attendance: number; takrirler: number; days: number };
 
 /** Device state -> cloud backup shape (missing lists become empty ones). */
 export function toSnapshot(s: Partial<State> | null | undefined): Snapshot {
@@ -26,6 +26,7 @@ export function snapshotCounts(s: Partial<Snapshot> | null | undefined): Snapsho
     tutanaklar: s?.tutanaklar?.length ?? 0,
     attendance: s?.attendance?.length ?? 0,
     takrirler: s?.takrirler?.length ?? 0,
+    days: new Set((s?.attendance ?? []).map((r) => (r as { date?: string })?.date)).size,
   };
 }
 
@@ -50,8 +51,10 @@ export function sameSnapshot(a: Partial<Snapshot> | null | undefined, b: Partial
 }
 
 /** "3 talebe, 12 günlük yoklama, 4 tutanak, 2 takrir" for confirm dialogs. */
+export function describeCounts(c: SnapshotCounts): string {
+  return `${c.students} talebe, ${c.days} günlük yoklama, ${c.tutanaklar} tutanak, ${c.takrirler} takrir`;
+}
+
 export function describeSnapshot(s: Partial<Snapshot> | null | undefined): string {
-  const c = snapshotCounts(s);
-  const days = new Set((s?.attendance ?? []).map((r) => (r as { date?: string })?.date)).size;
-  return `${c.students} talebe, ${days} günlük yoklama, ${c.tutanaklar} tutanak, ${c.takrirler} takrir`;
+  return describeCounts(snapshotCounts(s));
 }

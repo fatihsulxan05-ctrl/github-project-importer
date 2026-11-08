@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { describeSnapshot, isEmptySnapshot, sameSnapshot, snapshotCounts, toSnapshot } from "./cloud-data";
+import { describeCounts, describeSnapshot, isEmptySnapshot, sameSnapshot, snapshotCounts, toSnapshot } from "./cloud-data";
 
 const students = [{ id: "a", name: "Ahmet", sinif: "ihzari" }];
 const attendance = [{ id: "x", studentId: "a", date: "2026-11-08", vakitler: ["sabah"], ders: true, durum: "normal" }];
@@ -47,6 +47,10 @@ describe("describeSnapshot", () => {
   });
 
   it("counts the lists it is given", () => {
-    expect(snapshotCounts(toSnapshot({ students, attendance, tutanaklar, takrirler }))).toEqual({ students: 1, tutanaklar: 1, attendance: 1, takrirler: 1 });
+    expect(snapshotCounts(toSnapshot({ students, attendance, tutanaklar, takrirler }))).toEqual({ students: 1, tutanaklar: 1, attendance: 1, takrirler: 1, days: 1 });
+  });
+
+  it("describes counts without needing the records themselves", () => {
+    expect(describeCounts(snapshotCounts(toSnapshot({ students, attendance: [...attendance, { ...attendance[0], id: "y", date: "2026-11-07" }], tutanaklar, takrirler })))).toBe("1 talebe, 2 günlük yoklama, 1 tutanak, 1 takrir");
   });
 });
