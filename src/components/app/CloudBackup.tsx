@@ -2,7 +2,7 @@ import { useState } from "react";
 import "@lovable.dev/cloud-auth-js/styles.css";
 import { useAuth } from "@/lib/auth";
 import { useCloud } from "@/lib/cloud-sync";
-import { describeCounts, describeSnapshot, snapshotCounts } from "@/lib/cloud-data";
+import { describeCounts, describeSnapshot } from "@/lib/cloud-data";
 import { useStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -166,6 +166,6 @@ export function CloudSummary() {
   if (!ready || !user) return <p className="text-center text-xs text-muted-foreground">Veriler bu cihazda saklanır.</p>;
   if (status === "loading") return <p className="text-center text-xs text-muted-foreground">Bulut kontrol ediliyor…</p>;
   if (cloud && lastSavedAt) return <p className="text-center text-xs text-muted-foreground">Veriler bu cihazda ve bulutta yedekli · son kayıt {time(lastSavedAt)}</p>;
-  if (cloud) return <p className="text-center text-xs text-muted-foreground">Veriler bu cihazda ve bulutta yedekli ({snapshotCounts(cloud).students} talebe).</p>;
+  if (cloud) return <p className="text-center text-xs text-muted-foreground">Veriler bu cihazda ve bulutta yedekli ({cloud.students} talebe).</p>;
   return <p className="text-center text-xs text-muted-foreground">Buluta yedekleniyor…</p>;
 }
