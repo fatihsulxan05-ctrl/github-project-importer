@@ -15,6 +15,8 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppShell } from "@/components/app/AppShell";
 import { StartupSplash } from "@/components/app/StartupSplash";
 import { StoreProvider } from "../lib/store";
+import { AuthSessionProvider } from "../lib/auth";
+import { CloudSyncProvider } from "../lib/cloud-sync";
 // Background report sync is not needed for first paint; load it after the app is idle.
 const ReportAutoSync = lazy(() => import("../components/app/EmailReports").then((m) => ({ default: m.ReportAutoSync })));
 import { installChunkReloadHandler, isChunkLoadError, reloadForChunkError } from "../lib/chunk-reload";
@@ -151,14 +153,18 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <StoreProvider>
-        <StartupSplash />
-        <DeferredStartup />
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <AppShell>
-          <Outlet />
-        </AppShell>
-      </StoreProvider>
+      <AuthSessionProvider>
+        <StoreProvider>
+          <CloudSyncProvider>
+            <StartupSplash />
+            <DeferredStartup />
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <AppShell>
+              <Outlet />
+            </AppShell>
+          </CloudSyncProvider>
+        </StoreProvider>
+      </AuthSessionProvider>
     </QueryClientProvider>
   );
 }
