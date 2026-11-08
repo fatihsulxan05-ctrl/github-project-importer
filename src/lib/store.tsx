@@ -72,6 +72,8 @@ type Store = {
   all: State;
   /** Replaces every group's data (backup restore). */
   replaceAll: (s: State) => void;
+  /** True once the device's saved data has been read (never during SSR). */
+  ready: boolean;
   group: GroupId;
   setGroup: (g: GroupId) => void;
   takrirler: TakrirDay[];
@@ -137,6 +139,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     markTakrir: (date, studentId, verdi) => setState((p) => ({ ...p, takrirler: setTakrir(p.takrirler ?? [], date, studentId, verdi) })),
     removeTakrirDay: (date) => setState((p) => ({ ...p, takrirler: (p.takrirler ?? []).filter((d) => d.date !== date) })),
     all: state,
+    ready,
     group,
     setGroup,
     addStudent: (s) => setState((p) => ({ ...p, students: [...p.students, { ...s, sinif: s.sinif ?? group, id: uid() }] })),
