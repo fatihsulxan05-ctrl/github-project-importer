@@ -79,7 +79,7 @@ export function CloudBackup() {
         {status === "error" && <span className="text-destructive">Buluta ulaşılamadı: {message}</span>}
         {status === "ready" && conflict && <span className="font-semibold text-primary">Bu cihaz ile buluttaki yedek farklı. Hangisini kullanacağınıza siz karar verin.</span>}
         {status === "ready" && !conflict && cloud && lastSavedAt && `Buluttaki yedek güncel. Son kayıt: ${time(lastSavedAt)}`}
-        {status === "ready" && !conflict && cloud && !lastSavedAt && `Bulutta yedek var: ${describeSnapshot(cloud)}.`}
+        {status === "ready" && !conflict && cloud && !lastSavedAt && `Bulutta yedek var: ${describeCounts(cloud)}.`}
         {status === "ready" && !conflict && !cloud && "Bulutta henüz yedek yok. İlk kayıt birazdan otomatik yapılır."}
       </p>
       {message && status !== "error" && <p className="mt-1 text-sm text-destructive">{message}</p>}
@@ -103,7 +103,7 @@ export function CloudBackup() {
             <AlertDialogDescription asChild>
               <div className="space-y-2 text-left">
                 <p>Bu cihazdaki veriler buluta gönderilecek: {describeSnapshot(all)}</p>
-                {cloud && <p>Buluttaki eski yedek bununla değiştirilecek: {describeSnapshot(cloud)}</p>}
+                {cloud && <p>Buluttaki eski yedek bununla değiştirilecek: {describeCounts(cloud)}</p>}
                 <p>Yalnızca talebeler, yoklamalar, tutanaklar ve takrirler gider; fotoğraflar ve belgeler bu cihazda kalır.</p>
               </div>
             </AlertDialogDescription>
@@ -121,7 +121,7 @@ export function CloudBackup() {
             <AlertDialogTitle>Dikkat: Bu cihazdaki veriler silinecek</AlertDialogTitle>
             <AlertDialogDescription asChild>
               <div className="space-y-2 text-left">
-                <p><b>Bulutta:</b> {cloud ? describeSnapshot(cloud) : "yedek yok"}</p>
+                <p><b>Bulutta:</b> {cloud ? describeCounts(cloud) : "yedek yok"}</p>
                 <p><b>Bu cihazda:</b> {describeSnapshot(all)}</p>
                 <p className="font-semibold text-destructive">Onaylarsanız bu cihazdaki talebeler, yoklamalar ve tutanaklar silinip buluttaki yedek yüklenir. Bu işlem geri alınamaz.</p>
                 <p>Emin değilseniz önce "Vazgeç"e basıp "Bu cihazdakileri buluta gönder" ile mevcut verilerinizi buluta aktarın.</p>
@@ -141,7 +141,7 @@ export function CloudBackup() {
             <AlertDialogTitle>İki farklı kayıt var — hangisi kalsın?</AlertDialogTitle>
             <AlertDialogDescription asChild>
               <div className="space-y-2 text-left">
-                <p><b>Bulutta:</b> {cloud ? describeSnapshot(cloud) : "yedek yok"}{cloud ? ` (son kayıt ${time(cloud.updatedAt)})` : ""}</p>
+                <p><b>Bulutta:</b> {cloud ? describeCounts(cloud) : "yedek yok"}{cloud ? ` (son kayıt ${time(cloud.updatedAt)})` : ""}</p>
                 <p><b>Bu cihazda:</b> {describeSnapshot(all)}</p>
                 <p>Seçtiğiniz kayıt diğerinin yerine geçer. Emin değilseniz önce "Bu cihazdakileri buluta gönder"i seçip yedeğinizi koruyun.</p>
               </div>
